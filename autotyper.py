@@ -19,7 +19,7 @@ running = False
 
 def on_press(key):
     global running
-    if key == Key.ctrl and not running:
+    if key == Key.ctrl:
         running = True
         while running:
             left()
@@ -27,15 +27,14 @@ def on_press(key):
 
 def on_release(key):
     global running
-    if key == Key.ctrl and running:
+    if key == Key.ctrl:
         running = False
-
+        time.sleep(0.5)
 
 senser = keyboard.Listener(on_press=on_press, on_release=on_release)
 senser.start()
-time.sleep(10)
-senser.stop()
-
+while True:
+    time.sleep(0.1)
 #ADD WHAT YOU WANT TO AUTOTYPE INTO TEXT
 # time.sleep(5)
 # text = "Replace"

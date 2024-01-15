@@ -1,15 +1,15 @@
 import time
+import threading
 from pynput import keyboard
 from pynput.keyboard import Key, Controller
 
 my_keyboard = Controller()
-def cmdv(): #to test
-    with my_keyboard.pressed(Key.cmd):
-        my_keyboard.type('v')
+
 def left():
     my_keyboard.press(Key.left)
     time.sleep(0.1)
     my_keyboard.release(Key.left)
+
 def right():
     my_keyboard.press(Key.right)
     time.sleep(0.1)
@@ -17,24 +17,27 @@ def right():
 
 running = False
 
+def move_left_right():
+    while running:
+        left()
+        right()
+
 def on_press(key):
     global running
-    if key == Key.ctrl:
-        running = True
-        while running:
-            left()
-            right()
+    if key == Key.shift:
+        if not running:
+            running = True
+            threading.Thread(target=move_left_right).start()
+        else:
+            running = False
 
-def on_release(key):
-    global running
-    if key == Key.ctrl:
-        running = False
-        time.sleep(0.5)
+listener = keyboard.Listener(on_press=on_press)
+listener.start()
 
-senser = keyboard.Listener(on_press=on_press, on_release=on_release)
-senser.start()
+# Keep the program running
 while True:
     time.sleep(0.1)
+
 #ADD WHAT YOU WANT TO AUTOTYPE INTO TEXT
 # time.sleep(5)
 # text = "Replace"
